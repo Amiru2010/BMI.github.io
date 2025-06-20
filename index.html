@@ -4,7 +4,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BMI Calculator</title>
   <link rel="icon"href="https://cdn-icons-png.flaticon.com/512/4349/4349072.png" type="image/x-icon">
-  <link rel="stylesheet" href="styles.css"/>
+
+<style>
+  body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #74ebd5, #9face6);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+input[type="number"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: border 0.3s;
+}
+
+input[type="number"]:focus {
+  border-color: #74ebd5;
+  outline: none;
+}
+
+
+button {
+  background-color: #6C63FF;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #5548c8;
+  transform: scale(1.05);
+}
+
+.result {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.result p {
+  font-size: 18px;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+@media (max-width: 500px) {
+  .container {
+    padding: 20px;
+  }
+
+  input[type="number"] {
+    font-size: 14px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="container">
@@ -23,6 +114,55 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+<script>
+const weightInput = document.getElementById("weight");
+const heightInput = document.getElementById("height");
+const calcBtn = document.getElementById("calcBtn");
+const bmiValue = document.getElementById("bmiValue");
+const bmiCategory = document.getElementById("bmiCategory");
+const resultBox = document.getElementById("resultBox");
+
+
+const categories = [
+  { name: "Underweight", min: 0, max: 18.4, color: "#f4a261" },
+  { name: "Normal", min: 18.5, max: 24.9, color: "#2a9d8f" },
+  { name: "Overweight", min: 25, max: 29.9, color: "#e9c46a" },
+  { name: "Obese", min: 30, max: 100, color: "#e76f51" }
+];
+
+
+function calculateBMI() {
+  const weight = parseFloat(weightInput.value);
+  const height = parseFloat(heightInput.value);
+
+  if (!weight || !height || weight <= 0 || height <= 0) {
+    alert("Please enter valid values for weight and height.");
+    return;
+  }
+
+  const heightMeters = height / 100;
+  const bmi = (weight / (heightMeters ** 2)).toFixed(1);
+
+  bmiValue.textContent = `BMI: ${bmi}`;
+
+  const category = categories.find(c => bmi >= c.min && bmi <= c.max);
+  if (category) {
+    bmiCategory.textContent = `Category: ${category.name}`;
+    resultBox.style.backgroundColor = category.color;
+  } else {
+    bmiCategory.textContent = `Category: Unknown`;
+    resultBox.style.backgroundColor = "#ccc";
+  }
+}
+
+calcBtn.addEventListener("click", calculateBMI);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    calculateBMI();
+  }
+});
+</script>
+
 </body>
 </html>
